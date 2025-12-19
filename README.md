@@ -23,6 +23,10 @@ Open `OverlayWeb/producer.html` and `OverlayWeb/overlay.html` locally (the `run-
 * Paste JSON standings (top 20) and a focused driver payload to drive both the preview and the overlay page.
 * Preview what the on-stream overlay would show before connecting it to live telemetry or OBS browser sources.
 
+## IRacing-TV-2 style architecture (next steps)
+
+If you want to mirror the distributed overlay/producer flow popularized by [IRacing-TV-2](https://github.com/mherbold/IRacing-TV-2), see `docs/IRacing-TV-2-Approach.md` for a step-by-step outline. It keeps the current C# telemetry pipeline and browser overlays while adding a WebSocket-based telemetry daemon and web producer controls suitable for OBS browser sources.
+
 # Requirements
 Memory based telemetry must be enabled in the iRacing Simulator for the features of this SDK to work.
 This setting can be found in the iRacing Simulator app.ini file.
