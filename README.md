@@ -5,6 +5,24 @@ If you find any bugs or have any questions or feedback or ideas or whatever, ple
 
 https://github.com/mherbold/IRSDKSharper
 
+# Quickstart: overlay console sample (Windows)
+Use `run-overlay.bat` to build the solution and launch the console overlay sample that wires the ProducerPanelController, StandingsTowerWidget, and DriverInfoWidget. This expects iRacing to be running with memory telemetry enabled.
+
+```
+run-overlay.bat [Configuration]
+```
+
+* `Configuration` is optional and defaults to `Release` (pass `Debug` if you prefer).
+* The script restores NuGet packages, builds the solution, and runs the console overlay sample. The console window acts as the producer panel/overlay output—press `Ctrl+C` to stop.
+* When available, the script also opens the browser-based overlay and producer panel mockups in `OverlayWeb` so you can stage a control workflow without wiring OBS/NDI.
+
+## Browser overlay + producer mockups
+Open `OverlayWeb/producer.html` and `OverlayWeb/overlay.html` locally (the `run-overlay.bat` script will open both if present). They use a shared `BroadcastChannel` so you can:
+
+* Toggle widget visibility (tower + driver card).
+* Paste JSON standings (top 20) and a focused driver payload to drive both the preview and the overlay page.
+* Preview what the on-stream overlay would show before connecting it to live telemetry or OBS browser sources.
+
 # Requirements
 Memory based telemetry must be enabled in the iRacing Simulator for the features of this SDK to work.
 This setting can be found in the iRacing Simulator app.ini file.
@@ -370,6 +388,43 @@ https://github.com/mherbold/IRacing-TV-2
 This is a monster Unity based app that is a work in progress.
 This is the next iteration of my iRacing-TV app, which was originally based on IRSDKSharp.
 This app uses all of the features of IRSDKSharper, and would serve as the most comprehensive example.
+
+# Broadcast overlay building blocks
+
+This repository now includes a lightweight set of overlay primitives to speed up the creation of custom broadcast graphics and production tooling.
+The new `IRSDKSharper.Overlay` namespace contains:
+
+* `OverlayHost` – a simple manager for registering widgets and updating them from an `IRacingSdkData` tick.
+* `ProducerPanelController` – glue logic for wiring a control surface to overlay widgets (for example a separate producer dashboard or stream deck).
+* `StandingsTowerWidget` – a data-only leaderboard that tracks the top 20 (configurable) by position, including gaps, pit road state, and lap times.
+* `DriverInfoWidget` – a spotlight widget that follows a selected `CarIdx` and exposes lap, pit, and team metadata.
+* `OverlayTelemetryReader` – utility helpers for efficiently reading telemetry arrays into overlay widgets.
+
+You can wire the overlay framework into an existing polling loop like this:
+
+```cs
+var sdk = new IRacingSdk();
+var host = new OverlayHost();
+var tower = new StandingsTowerWidget();
+var driverInfo = new DriverInfoWidget();
+
+host.RegisterWidget( tower );
+host.RegisterWidget( driverInfo );
+
+var producer = new ProducerPanelController( host );
+producer.SetFocusCar( 1 );
+producer.SetTrackedCars( new[] { 1, 2, 3, 7, 12 } );
+
+// Inside your OnTelemetryData handler
+producer.Pump( sdk.Data );
+
+// The widget snapshots are now ready to be rendered by your UI layer
+var overlayEntries = tower.Entries;
+var focusDriver = driverInfo.Snapshot;
+```
+
+The widgets are intentionally UI-framework agnostic; they expose pure data models so you can render them with WPF, Unity UI, or web technologies while reusing the telemetry parsing logic.
+If you only want to surface a subset of cars on stream (for example, class leaders or favorites) call `SetTrackedCars` on the producer controller and the standings tower will automatically filter to those entries.
 
 # Differences to IRSDKSharp
 1. The connection loop is never terminated in IRSDKSharp even though it is not needed any more after the iRacing simulator starts up.

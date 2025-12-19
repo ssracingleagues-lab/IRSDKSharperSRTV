@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IRSDKSharper Producer Panel</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="sample-data.js"></script>
+    <script defer src="producer.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+        <div class="sidebar">
+            <h1>Producer Panel</h1>
+            <div class="panel">
+                <h3>Visibility</h3>
+                <div class="form-row">
+                    <label><input type="checkbox" id="toggle-tower" /> Show standings tower</label>
+                </div>
+                <div class="form-row">
+                    <label><input type="checkbox" id="toggle-driver" /> Show driver card</label>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Standings JSON</h3>
+                <textarea id="standings-json" rows="8" spellcheck="false"></textarea>
+                <div class="form-row">
+                    <button id="push-standings">Send standings to overlay</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Driver JSON</h3>
+                <textarea id="driver-json" rows="6" spellcheck="false"></textarea>
+                <div class="form-row">
+                    <button id="push-driver">Send driver to overlay</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Live Preview</h2>
+            <p class="badge">BroadcastChannel linked · open overlay.html in another tab</p>
+
+            <div class="overlay-preview">
+                <div class="overlay-frame" style="width: 280px;">
+                    <div class="badge">Standings Tower</div>
+                    <div id="preview-standings"></div>
+                </div>
+                <div class="overlay-frame">
+                    <div class="badge">Driver Info</div>
+                    <div id="preview-driver"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
