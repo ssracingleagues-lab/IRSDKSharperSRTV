@@ -16,6 +16,17 @@ run-overlay.bat [Configuration]
 * The script restores NuGet packages, builds the solution, and runs the console overlay sample. The console window acts as the producer panel/overlay output—press `Ctrl+C` to stop.
 * When available, the script also opens the browser-based overlay and producer panel mockups in `OverlayWeb` so you can stage a control workflow without wiring OBS/NDI.
 
+## Running from a ZIP download
+
+If you downloaded the repository ZIP from GitHub, you can extract it anywhere on Windows and run the overlays without cloning:
+
+1. Install the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download) if you have not already.
+2. Ensure iRacing has `irsdkEnableMem=1` set in `app.ini` (required for telemetry).
+3. Right-click the ZIP, select **Extract All**, and open the extracted folder.
+4. Double-click `run-overlay.bat` (or run it from `cmd.exe`) to restore packages, build, and launch the console overlay sample.
+5. The script also opens `OverlayWeb/producer.html` and `OverlayWeb/overlay.html` in your default browser so you can paste sample standings/driver JSON and see the mock overlay update live.
+6. Leave the console and browser tabs open while broadcasting; close them when finished.
+
 ## Browser overlay + producer mockups
 Open `OverlayWeb/producer.html` and `OverlayWeb/overlay.html` locally (the `run-overlay.bat` script will open both if present). They use a shared `BroadcastChannel` so you can:
 

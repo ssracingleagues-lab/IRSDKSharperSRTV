@@ -10,27 +10,41 @@ if errorlevel 1 (
     exit /b 1
 )
 
+set SCRIPT_DIR=%~dp0
+pushd "%SCRIPT_DIR%" >nul
+
 set CONFIG=Release
 if not "%1"=="" set CONFIG=%1
 
 echo Restoring NuGet packages...
 dotnet restore IRSDKSharper.sln
-if errorlevel 1 exit /b 1
+if errorlevel 1 (
+    echo Restore failed.
+    popd >nul
+    exit /b 1
+)
 
 echo Building IRSDKSharper solution (%CONFIG%)...
 dotnet build IRSDKSharper.sln -c %CONFIG%
-if errorlevel 1 exit /b 1
+if errorlevel 1 (
+    echo Build failed.
+    popd >nul
+    exit /b 1
+)
 
-set SCRIPT_DIR=%~dp0
 set WEB_DIR=%SCRIPT_DIR%OverlayWeb
 
 if exist "%WEB_DIR%\producer.html" (
     echo Opening producer panel and overlay HTML previews...
     start "" "%WEB_DIR%\producer.html"
     start "" "%WEB_DIR%\overlay.html"
+) else (
+    echo OverlayWeb folder not found. Skipping browser preview launch.
 )
 
 echo Launching overlay console sample with producer panel controller...
 dotnet run --project OverlayConsoleApp/OverlayConsoleApp.csproj -c %CONFIG%
+
+popd >nul
 
 endlocal
