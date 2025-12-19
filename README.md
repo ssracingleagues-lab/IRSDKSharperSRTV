@@ -5,6 +5,16 @@ If you find any bugs or have any questions or feedback or ideas or whatever, ple
 
 https://github.com/mherbold/IRSDKSharper
 
+# Quickstart: overlay console sample (Windows)
+Use `run-overlay.bat` to build the solution and launch the console overlay sample that wires the ProducerPanelController, StandingsTowerWidget, and DriverInfoWidget. This expects iRacing to be running with memory telemetry enabled.
+
+```
+run-overlay.bat [Configuration]
+```
+
+* `Configuration` is optional and defaults to `Release` (pass `Debug` if you prefer).
+* The script restores NuGet packages, builds the solution, and runs the console overlay sample. The console window acts as the producer panel/overlay output—press `Ctrl+C` to stop.
+
 # Requirements
 Memory based telemetry must be enabled in the iRacing Simulator for the features of this SDK to work.
 This setting can be found in the iRacing Simulator app.ini file.
